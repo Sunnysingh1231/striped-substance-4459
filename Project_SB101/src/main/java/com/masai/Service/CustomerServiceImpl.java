@@ -1,0 +1,22 @@
+package com.masai.Service;
+
+import com.masai.Dao.CustomerDao;
+import com.masai.Dao.CustomerDaoImpl;
+import com.masai.Entity.Customer;
+import com.masai.Exception.SomthingWentWrongException;
+
+public class CustomerServiceImpl implements CustomerService {
+
+	public CustomerServiceImpl() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void coustmerLogin(Customer addCustomer) throws SomthingWentWrongException{
+		
+		CustomerDao customerDao = new CustomerDaoImpl();
+		customerDao.coustmerLogin(addCustomer);
+
+	}
+
+}
