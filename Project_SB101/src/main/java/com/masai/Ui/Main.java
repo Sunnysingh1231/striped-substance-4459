@@ -42,7 +42,34 @@ public class Main {
 	}
 	
 	//**************************************************************
-
+	
+	public static void adminLogin(Scanner sc) {
+		System.out.println("Enter Username");
+		String username = sc.next();
+		System.out.println("Enter password");
+		String password = sc.next();
+		if(username.equals("admin")&&password.equals("admin")) {
+			System.out.println("login successfull");
+			
+			int inpcus=sc.nextInt();
+			switch (inpcus) {
+			case 1:
+				
+				
+				break;
+				
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + inpcus);
+			}
+			
+			
+		}
+	}
+	
+	public static void getallCustomer() {
+		
+	}
+	
 	
 	
 	public static void main(String[] args) {
@@ -57,7 +84,7 @@ public class Main {
 			n = Integer.parseInt(sc.nextLine());
 			switch (n) {
 			case 1:
-				System.out.println("1. Admin");
+				adminLogin(sc);
 				break;
 			case 2:
 				System.out.println("1. Admin");
