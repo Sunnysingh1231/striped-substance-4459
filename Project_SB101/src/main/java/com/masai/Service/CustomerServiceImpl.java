@@ -19,4 +19,19 @@ public class CustomerServiceImpl implements CustomerService {
 
 	}
 
+	@Override
+	public void UpdateDetails(String email, String nName, String nEmail, int nMob, String nPassword)
+			throws SomthingWentWrongException {
+		CustomerDao customerDao = new CustomerDaoImpl();
+		customerDao.UpdateDetails(email, nName, nEmail, nMob, nPassword);
+		
+	}
+
+	@Override
+	public Customer getCustomerByEmail(String email) throws SomthingWentWrongException {
+		CustomerDao customerDao = new CustomerDaoImpl();
+		return customerDao.getCustomerByEmail(email);
+		
+	}
+
 }

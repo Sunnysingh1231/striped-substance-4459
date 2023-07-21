@@ -1,23 +1,22 @@
 package com.masai.Ui;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
+import admin.*;
 import com.masai.Entity.Customer;
+import com.masai.Exception.SomthingWentWrongException;
 import com.masai.Service.CustomerService;
 import com.masai.Service.CustomerServiceImpl;
 
 public class Main {
 	
-	public static void coustmerRegistration(Scanner sd) {
-		System.out.println("Enter your Email Id");
-		String email = sd.next();
-		System.out.println("Enter your Password");
-		String password = sd.next();
-	}
-	
-	//**************************************************************
-	
-	public static void coustmerLogin(Scanner se) {
+	public static void coustmerRegistration(Scanner se) {
+		
+		
 		System.out.println("Enter your Name");
 		String name = se.next();
 		System.out.println("Enter your Email");
@@ -43,32 +42,194 @@ public class Main {
 	
 	//**************************************************************
 	
+	public static void UpdateDetails(Scanner sg) {
+		System.out.println("Enter Customer Email id");
+		String Email = sg.next();
+		sg.nextLine();
+		
+		System.out.println("Enter New Name");
+		String name = sg.next();
+		System.out.println("Enter New Email");
+		String email = sg.next();
+		System.out.println("Enter New Mobile No.");
+		int mobileNo = sg.nextInt();
+		System.out.println("Enter New Password");
+		String password = sg.next();
+		sg.nextLine();
+		
+		
+		CustomerService customerService = new CustomerServiceImpl();
+		
+		try {
+			customerService.UpdateDetails(Email,name,email,mobileNo,password);
+			System.out.println("Customer updated successfully");
+		} catch (SomthingWentWrongException ex) {
+			System.out.println(ex.getMessage());
+		}
+		
+		
+		
+	}
+	//**************************************************************
+	public static void findCustomerByEmail(Scanner sg) {
+		System.out.println("Enter Customer id");
+		String emailString=sg.next();
+		sg.nextLine();
+	
+		CustomerService customerService = new CustomerServiceImpl();
+		
+		try {
+			Customer customer = customerService.getCustomerByEmail(emailString);
+			System.out.println(customer);
+		} catch (SomthingWentWrongException ex) {
+			System.out.println(ex.getMessage());
+		}
+		
+		
+		
+	}
+	
+	
+	
+	//**************************************************************
+	
+	public static void coustmerLogin(Scanner sd) {
+		System.out.println("Enter your Email Id");
+		String email = sd.next();
+		System.out.println("Enter your Password");
+		String password = sd.next();
+		sd.nextLine();
+//		
+		
+		try {
+			
+			String url="jdbc:mysql://localhost:3306/OnlineShopping";
+			String user="root";
+			String Password="Sunny@123";
+			
+			Connection cn1=DriverManager.getConnection(url,user,Password);
+						
+			
+			String query="SELECT * FROM Customer_credential;";
+			
+			Statement stm=cn1.createStatement();
+			
+			
+			ResultSet rd=stm.executeQuery(query);
+			
+			String f = "n";
+			
+			while(rd.next()) {
+//				System.out.println(rd.getString(3));
+//				System.out.println(rd.getString(4));
+				
+				if(password.equals(rd.getString(3))&&email.equals(rd.getString(4))) {
+					f="y";
+				}
+			}
+			if(f.equals("y")) {
+				System.out.println("Login successful");
+				int nm=0;
+				
+				do {
+					System.out.println("1. Update Details");
+					System.out.println("2. Rais Ticket");
+					System.out.println("3. viev status");
+					System.out.println("4. Providing a feedback");
+					System.out.println("0. LogOut");
+					nm=Integer.parseInt(sd.nextLine());
+					switch (nm) {
+					case 1:
+						UpdateDetails(sd);
+						break;
+
+					case 2:
+						raisTicket();
+						break;
+					default:
+						break;
+					}
+				} while (nm!=0);
+
+			}else {
+				System.out.println("Please check your Email or password");
+			}
+			
+			stm.execute(query);
+			cn1.close();
+		} catch (Exception e) {
+			e.printStackTrace();	
+		}
+		
+		
+	}
+	
+	
+	public static void raisTicket() {
+		System.out.println("ticket rais");
+	}
+	
+	//*********************Admin*****************************************
+	
 	public static void adminLogin(Scanner sc) {
 		System.out.println("Enter Username");
 		String username = sc.next();
 		System.out.println("Enter password");
 		String password = sc.next();
+		sc.nextLine();
 		if(username.equals("admin")&&password.equals("admin")) {
 			System.out.println("login successfull");
 			
-			int inpcus=sc.nextInt();
-			switch (inpcus) {
-			case 1:
+			int inpcus=0;
+			
+			System.out.println("1. View CSR.");
+			
+			System.out.println("2. View Customers.");
+			
+			do {
+				inpcus = Integer.parseInt(sc.nextLine());
+				
+				switch (inpcus) {
+				case 1:
+					
+					break;
+					
+				case 2:
+					
+//					do {
+//						System.out.println("2. View Customers.");
+//					} while (condition);
+					
+					CustomerDetail getcust = new CustomerDetail();
+					getcust.getallCustomer();
+					break;
+					
+				case 3:
+	
+					break;
+	
+				case 4:
+	
+					break;
+
+				default:
+					break;
+				}
 				
 				
-				break;
 				
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + inpcus);
-			}
+			} while (inpcus!=0);
 			
 			
 		}
 	}
 	
-	public static void getallCustomer() {
-		
-	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -76,10 +237,11 @@ public class Main {
 		Scanner sc =new Scanner(System.in);
 		int n=0;
 		do {
-			System.out.println("Welcome in Customer Support Services.");
+			System.out.println("Welcome in CustomerDetail Support Services.");
 			System.out.println("1. Admin");
-			System.out.println("2. Customer Support Presentative");
-			System.out.println("3. Customer");
+			System.out.println("2. CustomerDetail Support Presentative");
+			System.out.println("3. CustomerDetail");
+			System.out.println("4. Find customer by email");
 			System.out.println("0. Exit");
 			n = Integer.parseInt(sc.nextLine());
 			switch (n) {
@@ -91,6 +253,10 @@ public class Main {
 				break;
 			case 3:
 				CustomerSide(sc);
+				break;
+				
+			case 4:
+				findCustomerByEmail(sc);
 				break;
 			case 0:
 				System.out.println("Exiting the application. Goodbye!");
@@ -109,26 +275,28 @@ public class Main {
 	}
 	//**************************************************************
 	
-	public static void CustomerSide(Scanner sc) {
-		
-		
-			System.out.println("1. Login (Alredy have an Account)");
-			System.out.println("2. Resistration (New Customer)");
-			int inp = Integer.parseInt(sc.nextLine());
-//			System.out.println("0. Exit");
-			switch (inp) {
-			case 1:
-				coustmerRegistration(sc);
-				break;
-			case 2:
-				coustmerLogin(sc);
-				break;
+	public static void CustomerSide(Scanner sf) {
+		int nn=0;
 
-			default:
-				System.out.println("Please Enter a valid Number.");
-				break;
-			}
-			
+		
+		System.out.println("1. Login (Alredy have an Account)");
+		System.out.println("2. Resistration (New CustomerDetail)");
+		int inp = Integer.parseInt(sf.nextLine());
+//		System.out.println("0. Exit");
+		switch (inp) {
+		case 1:
+			coustmerLogin(sf);
+			break;
+		case 2:
+			coustmerRegistration(sf);
+			break;
+
+		default:
+			System.out.println("Please Enter a valid Number.");
+			break;
+		}
 	}
+		
+		
 	//**************************************************************
 }
