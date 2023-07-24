@@ -2,6 +2,7 @@ package com.masai.Service;
 
 import com.masai.Dao.CustomerDao;
 import com.masai.Dao.CustomerDaoImpl;
+import com.masai.Entity.Csr;
 import com.masai.Entity.Customer;
 import com.masai.Exception.SomthingWentWrongException;
 
@@ -31,6 +32,19 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer getCustomerByEmail(String email) throws SomthingWentWrongException {
 		CustomerDao customerDao = new CustomerDaoImpl();
 		return customerDao.getCustomerByEmail(email);
+		
+	}
+
+//	@Override
+//	public void CsrLogin(Csr addCustomer) throws SomthingWentWrongException {
+//		
+//		
+//	}
+
+	@Override
+	public void CsrLogin(Csr addCsr) throws SomthingWentWrongException {
+		CustomerDao customerDao = new CustomerDaoImpl();
+		customerDao.CsrLogin(addCsr);
 		
 	}
 
