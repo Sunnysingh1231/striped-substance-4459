@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import admin.*;
 import com.masai.Entity.Customer;
+import com.masai.Entity.Csr;
 import com.masai.Exception.SomthingWentWrongException;
 import com.masai.Service.CustomerService;
 import com.masai.Service.CustomerServiceImpl;
@@ -98,8 +99,7 @@ public class Main {
 		String email = sd.next();
 		System.out.println("Enter your Password");
 		String password = sd.next();
-		sd.nextLine();
-//		
+		sd.nextLine();	
 		
 		try {
 			
@@ -165,13 +165,101 @@ public class Main {
 	}
 	
 	
+	public static void loginCsr(Scanner sd) {
+	
+		System.out.println("Enter your Email Id");
+		String email = sd.next();
+		System.out.println("Enter your Password");
+		String password = sd.next();
+		sd.nextLine();	
+		
+		try {
+			
+			String url="jdbc:mysql://localhost:3306/OnlineShopping";
+			String user="root";
+			String Password="Sunny@123";
+			
+			Connection cn1=DriverManager.getConnection(url,user,Password);
+						
+			
+			String query="SELECT * FROM csr;";
+			
+			Statement stm=cn1.createStatement();
+			
+			
+			ResultSet rd=stm.executeQuery(query);
+			
+			String f = "n";
+			
+			while(rd.next()) {
+	//			System.out.println(rd.getString(3));
+	//			System.out.println(rd.getString(4));
+				
+				if(password.equals(rd.getString(3))&&email.equals(rd.getString(4))) {
+					f="y";
+				}
+			}
+			if(f.equals("y")) {
+				System.out.println("Login successful.");
+				int nm=0;
+				
+				do {
+					System.out.println("1. View details");
+					System.out.println("2. Update Details");
+					System.out.println("3. viev tickets");
+					System.out.println("4. Providing a feedback");
+					System.out.println("0. LogOut");
+					nm=Integer.parseInt(sd.nextLine());
+					switch (nm) {
+					case 1:
+						System.out.println("Enter Email");
+						String em = sd.next();
+						sd.nextLine();
+						CustomerDetail cd = new CustomerDetail();
+						cd.coustmerLogin(em);
+						break;
+
+					case 2:
+						System.out.println("Enter Email");
+						String ema = sd.next();
+						sd.nextLine();
+						CustomerDetail ce = new CustomerDetail();
+						ce.updateCsr(ema,sd);
+						break;
+					default:
+						System.out.println("Please Enter a valid Number");
+						break;
+					}
+				} while (nm!=0);
+	
+			}else {
+				System.out.println("Please check your Email or password");
+			}
+			
+			stm.execute(query);
+			cn1.close();
+		} catch (Exception e) {
+			e.printStackTrace();	
+		}
+	
+	
+}
+	
+	
+	
+	
+	
+	
+//**************************************************************
+	
+	
 	public static void raisTicket() {
 		System.out.println("ticket rais");
 	}
 	
 	//*********************Admin*****************************************
 	
-	public static void adminLogin(Scanner sc) {
+	public static void adminLogin(Scanner sc) throws SomthingWentWrongException {
 		System.out.println("Enter Username");
 		String username = sc.next();
 		System.out.println("Enter password");
@@ -182,36 +270,24 @@ public class Main {
 			
 			int inpcus=0;
 			
-			System.out.println("1. View CSR.");
+			System.out.println("1. CSR.");
 			
-			System.out.println("2. View Customers.");
+			System.out.println("2. Customers.");
 			
 			do {
 				inpcus = Integer.parseInt(sc.nextLine());
 				
 				switch (inpcus) {
 				case 1:
-					
+					CustomerDetail getcsr = new CustomerDetail();
+					getcsr.Csr(sc);
 					break;
-					
 				case 2:
 					
-//					do {
-//						System.out.println("2. View Customers.");
-//					} while (condition);
-					
 					CustomerDetail getcust = new CustomerDetail();
-					getcust.getallCustomer();
+					getcust.Customers(sc);
 					break;
 					
-				case 3:
-	
-					break;
-	
-				case 4:
-	
-					break;
-
 				default:
 					break;
 				}
@@ -224,16 +300,112 @@ public class Main {
 		}
 	}
 	
+	//********************CsrLogin******************************************
+	
+	public static void CsrLogin(Scanner sd) {
+		System.out.println("Enter your Email Id");
+		String email = sd.next();
+		System.out.println("Enter your Password");
+		String password = sd.next();
+		sd.nextLine();	
+		
+		try {
+			
+			String url="jdbc:mysql://localhost:3306/OnlineShopping";
+			String user="root";
+			String Password="Sunny@123";
+			
+			Connection cn1=DriverManager.getConnection(url,user,Password);
+						
+			
+			String query="SELECT * FROM Csr;";
+			
+			Statement stm=cn1.createStatement();
+			
+			
+			ResultSet rd=stm.executeQuery(query);
+			
+			String f = "n";
+			
+			while(rd.next()) {
+//				System.out.println(rd.getString(3));
+//				System.out.println(rd.getString(4));
+				
+				if(password.equals(rd.getString(3))&&email.equals(rd.getString(4))) {
+					f="y";
+				}
+			}
+			if(f.equals("y")) {
+				System.out.println("Login successful");
+				int nm=0;
+				
+				do {
+					System.out.println("1. Update Details");
+					System.out.println("2. Rais Ticket");
+					System.out.println("3. viev status");
+					System.out.println("4. Providing a feedback");
+					System.out.println("0. LogOut");
+					nm=Integer.parseInt(sd.nextLine());
+					switch (nm) {
+					case 1:
+						UpdateDetails(sd);
+						break;
+
+					case 2:
+						raisTicket();
+						break;
+					default:
+						break;
+					}
+				} while (nm!=0);
+
+			}else {
+				System.out.println("Please check your Email or password");
+			}
+			
+			stm.execute(query);
+			cn1.close();
+		} catch (Exception e) {
+			e.printStackTrace();	
+		}
+		
+		
+	}
+	
+	//**************************************************************
+	
+	public static void CsrRegistration(Scanner se) {
+		
+		
+		System.out.println("Enter your Name");
+		String name = se.next();
+		System.out.println("Enter your Email");
+		String email = se.next();
+		System.out.println("Enter your Mobile No.");
+		int mobileNo = se.nextInt();
+		System.out.println("Enter your Password");
+		String password = se.next();
+		se.nextLine();
+		
+		CustomerService customerService = new CustomerServiceImpl();
+		
+		try {
+			Csr addCustomer = new Csr(name,email,mobileNo,password);
+			customerService.CsrLogin(addCustomer);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		System.out.println("Registration successful");
+	}
+	
+	
+	//**************************************************************
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SomthingWentWrongException {
 		Scanner sc =new Scanner(System.in);
 		int n=0;
 		do {
@@ -249,7 +421,7 @@ public class Main {
 				adminLogin(sc);
 				break;
 			case 2:
-				System.out.println("1. Admin");
+				CsrSide(sc);
 				break;
 			case 3:
 				CustomerSide(sc);
@@ -279,8 +451,8 @@ public class Main {
 		int nn=0;
 
 		
-		System.out.println("1. Login (Alredy have an Account)");
-		System.out.println("2. Resistration (New CustomerDetail)");
+		System.out.println("1. Login");
+		System.out.println("2. Sign Up (No Account)");
 		int inp = Integer.parseInt(sf.nextLine());
 //		System.out.println("0. Exit");
 		switch (inp) {
@@ -299,4 +471,25 @@ public class Main {
 		
 		
 	//**************************************************************
+	public static void CsrSide(Scanner sg) {
+		int nn=0;
+
+		
+		System.out.println("1. Login");
+		System.out.println("2. Sign Up (No Account)");
+		int inp = Integer.parseInt(sg.nextLine());
+//		System.out.println("0. Exit");
+		switch (inp) {
+		case 1:
+			loginCsr(sg);
+			break;
+		case 2:
+			CsrRegistration(sg);
+			break;
+		default:
+			System.out.println("Please Enter a valid Number.");
+			break;
+		}
+	}
+	
 }

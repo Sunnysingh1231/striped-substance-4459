@@ -1,5 +1,6 @@
 package com.masai.Dao;
 
+import com.masai.Entity.Csr;
 import com.masai.Entity.Customer;
 import com.masai.Exception.SomthingWentWrongException;
 import com.masai.Utility.Util;
@@ -97,6 +98,33 @@ public class CustomerDaoImpl implements CustomerDao {
 	    return customer;
 	}
 
+	@Override
+	public void CsrLogin(Csr addCustomer) throws SomthingWentWrongException {
+		EntityManager em=null;
+		EntityTransaction et = null;
+		try {
+			
+			em = Util.getEntityManager();
+			et = em.getTransaction();
+			
+			et.begin();
+			em.persist(addCustomer);
+			et.commit();
+			
+			
+		} catch (PersistenceException e) {
+			et.rollback();
+			throw new SomthingWentWrongException("Unable to add CustomerDetail, try again later");
+		}finally {
+	        if (em != null) {
+	            em.close();
+	        }
+		}
+		
+	}
+	
+	
+
 }
 
 /*
@@ -107,3 +135,5 @@ public class CustomerDaoImpl implements CustomerDao {
 			em.persist(addCustomer);
 			et.commit();
  */
+
+
